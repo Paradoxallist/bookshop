@@ -1,39 +1,38 @@
 package store.bookshop.model;
 
-import jakarta.annotation.Nonnull;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import java.math.BigDecimal;
-import lombok.Data;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.NonNull;
+import lombok.RequiredArgsConstructor;
+import lombok.Setter;
 
 @Entity
-@Data
+@Getter
+@Setter
+@NoArgsConstructor
+@RequiredArgsConstructor
 public class Book {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    @Nonnull
+    @NonNull
+    @Column(name = "title", nullable = false)
     private String title;
-    @Nonnull
+    @NonNull
+    @Column(name = "author", nullable = false)
     private String author;
-    @Nonnull
-    @Column(unique = true)
+    @NonNull
+    @Column(name = "isbn", nullable = false, unique = true)
     private String isbn;
-    @Nonnull
+    @NonNull
+    @Column(name = "price", nullable = false)
     private BigDecimal price;
     private String description;
     private String coverImage;
-
-    public Book(String title, String author, String isbn, BigDecimal price) {
-        this.title = title;
-        this.author = author;
-        this.isbn = isbn;
-        this.price = price;
-    }
-
-    public Book() {
-    }
 }
