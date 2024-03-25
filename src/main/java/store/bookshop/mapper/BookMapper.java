@@ -8,7 +8,7 @@ import store.bookshop.model.Book;
 
 @Mapper(config = MapperConfig.class)
 public interface BookMapper {
-    BookDto toDo(Book book);
+    BookDto toDto(Book book);
 
     Book toModel(CreateBookRequestDto requestDto);
 }
