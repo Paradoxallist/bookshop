@@ -21,13 +21,13 @@ public class BookServiceImpl implements BookService {
     @Override
     public BookDto save(CreateBookRequestDto requestDto) {
         Book book = bookMapper.toModel(requestDto);
-        return bookMapper.toDo(bookRepository.save(book));
+        return bookMapper.toDto(bookRepository.save(book));
     }
 
     @Override
     public List<BookDto> findAll() {
         return bookRepository.findAll().stream()
-                .map(bookMapper::toDo)
+                .map(bookMapper::toDto)
                 .collect(Collectors.toList());
     }
 
@@ -35,6 +35,6 @@ public class BookServiceImpl implements BookService {
     public BookDto findById(Long id) {
         Book book = bookRepository.findById(id).orElseThrow(
                 () -> new EntityNotFoundException("Can't find book by id: " + id));
-        return bookMapper.toDo(book);
+        return bookMapper.toDto(book);
     }
 }
