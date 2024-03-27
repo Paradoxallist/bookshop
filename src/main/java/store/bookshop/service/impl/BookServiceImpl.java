@@ -1,5 +1,6 @@
 package store.bookshop.service.impl;
 
+import jakarta.transaction.Transactional;
 import java.util.List;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
@@ -39,9 +40,10 @@ public class BookServiceImpl implements BookService {
     }
 
     @Override
+    @Transactional
     public BookDto updateById(CreateBookRequestDto requestDto, Long id) {
         if (bookRepository.findById(id).isEmpty()) {
-            throw new EntityNotFoundException("There is no exist book with this id: " + id);
+            throw new EntityNotFoundException("Book doesn't exist with id: " + id);
         }
         Book book = bookMapper.toModel(requestDto);
         book.setId(id);
