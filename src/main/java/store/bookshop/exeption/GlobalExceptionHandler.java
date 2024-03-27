@@ -16,17 +16,21 @@ import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExcep
 @ControllerAdvice
 public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
 
+    private static final String TIMESTAMP_VARIABLE = "timestamp";
+    private static final String STATUS_VARIABLE = "status";
+    private static final String ERRORS_VARIABLE = "errors";
+
     @ExceptionHandler(ConstraintViolationException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     ResponseEntity<Object> handleConstraintViolationException(
             ConstraintViolationException exception) {
         Map<String, Object> body = new LinkedHashMap<>();
-        body.put("timestamp", LocalDateTime.now());
-        body.put("status", HttpStatus.BAD_REQUEST);
+        body.put(TIMESTAMP_VARIABLE, LocalDateTime.now());
+        body.put(STATUS_VARIABLE, HttpStatus.BAD_REQUEST);
         List<String> errors = exception.getConstraintViolations().stream()
                 .map(this::getErrorMessage)
                 .toList();
-        body.put("errors", errors);
+        body.put(ERRORS_VARIABLE, errors);
         return new ResponseEntity<>(body, HttpStatus.BAD_REQUEST);
     }
 
