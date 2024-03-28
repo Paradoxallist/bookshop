@@ -6,7 +6,8 @@ import lombok.SneakyThrows;
 import store.bookshop.dto.user.CreateUserRequestDto;
 import store.bookshop.exeption.RegistrationException;
 
-public class PasswordMatchValidator implements ConstraintValidator<PasswordMatch, CreateUserRequestDto> {
+public class PasswordMatchValidator implements
+        ConstraintValidator<PasswordMatch, CreateUserRequestDto> {
 
     @SneakyThrows
     @Override
