@@ -16,14 +16,14 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
-import store.bookshop.dto.BookDto;
-import store.bookshop.dto.CreateBookRequestDto;
-import store.bookshop.service.BookService;
+import store.bookshop.dto.book.BookDto;
+import store.bookshop.dto.book.CreateBookRequestDto;
+import store.bookshop.service.book.BookService;
 
 @Tag(name = "Book manager", description = "Endpoint for managing books")
 @RequiredArgsConstructor
 @RestController
-@RequestMapping(value = "/books")
+@RequestMapping("/books")
 public class BookController {
 
     private final BookService bookService;
@@ -36,7 +36,7 @@ public class BookController {
 
     @GetMapping("/{id}")
     @Operation(summary = "Get book by id")
-    public BookDto getBookById(@PathVariable Long id) {
+    public BookDto getBookById(@PathVariable("id") Long id) {
         return bookService.findById(id);
     }
 
@@ -50,14 +50,14 @@ public class BookController {
     @PutMapping("/{id}")
     @Operation(summary = "Update book by id")
     public BookDto updateBookById(@RequestBody @Valid CreateBookRequestDto requestDto,
-                                  @PathVariable Long id) {
+                                  @PathVariable("id") Long id) {
         return bookService.updateById(requestDto, id);
     }
 
     @ResponseStatus(HttpStatus.NO_CONTENT)
     @DeleteMapping("/{id}")
     @Operation(summary = "Delete book by id")
-    public void deleteById(@PathVariable Long id) {
+    public void deleteById(@PathVariable("id") Long id) {
         bookService.deleteById(id);
     }
 }

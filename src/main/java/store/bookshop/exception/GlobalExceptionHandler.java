@@ -1,4 +1,4 @@
-package store.bookshop.exeption;
+package store.bookshop.exception;
 
 import jakarta.validation.ConstraintViolation;
 import jakarta.validation.ConstraintViolationException;
@@ -39,6 +39,18 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
         String message = violation.getMessage();
         return field + " " + message;
 
+    }
+
+    @ExceptionHandler({RegistrationException.class})
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    ResponseEntity<Object> passwordMatchException(
+            Throwable exception) {
+        Map<String, Object> body = new LinkedHashMap<>();
+        body.put(TIMESTAMP_VARIABLE, LocalDateTime.now());
+        body.put(STATUS_VARIABLE, HttpStatus.BAD_REQUEST);
+        String errors = exception.getMessage();
+        body.put(ERRORS_VARIABLE, errors);
+        return new ResponseEntity<>(body, HttpStatus.BAD_REQUEST);
     }
 }
 

@@ -1,4 +1,4 @@
-package store.bookshop.service.impl;
+package store.bookshop.service.book;
 
 import jakarta.transaction.Transactional;
 import java.util.List;
@@ -6,13 +6,12 @@ import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
-import store.bookshop.dto.BookDto;
-import store.bookshop.dto.CreateBookRequestDto;
-import store.bookshop.exeption.EntityNotFoundException;
+import store.bookshop.dto.book.BookDto;
+import store.bookshop.dto.book.CreateBookRequestDto;
+import store.bookshop.exception.EntityNotFoundException;
 import store.bookshop.mapper.BookMapper;
 import store.bookshop.model.Book;
 import store.bookshop.repository.BookRepository;
-import store.bookshop.service.BookService;
 
 @RequiredArgsConstructor
 @Service

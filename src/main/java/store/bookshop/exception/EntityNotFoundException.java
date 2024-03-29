@@ -1,4 +1,4 @@
-package store.bookshop.exeption;
+package store.bookshop.exception;
 
 public class EntityNotFoundException extends RuntimeException {
     public EntityNotFoundException(String message) {

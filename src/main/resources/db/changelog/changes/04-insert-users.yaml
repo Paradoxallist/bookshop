@@ -1,0 +1,68 @@
+databaseChangeLog:
+  - changeSet:
+      id: 2-insert-users
+      author: your_name_or_identifier
+      changes:
+        - insert:
+            tableName: users
+            columns:
+              - column:
+                  name: email
+                  value: "user1@example.com"
+              - column:
+                  name: password
+                  value: "password1"
+              - column:
+                  name: first_name
+                  value: "John"
+              - column:
+                  name: last_name
+                  value: "Doe"
+              - column:
+                  name: shipping_address
+                  value: "123 Main St, Anytown"
+              - column:
+                  name: is_deleted
+                  valueBoolean: false
+        - insert:
+            tableName: users
+            columns:
+              - column:
+                  name: email
+                  value: "user2@example.com"
+              - column:
+                  name: password
+                  value: "password2"
+              - column:
+                  name: first_name
+                  value: "Jane"
+              - column:
+                  name: last_name
+                  value: "Smith"
+              - column:
+                  name: shipping_address
+                  value: "456 Elm St, Othertown"
+              - column:
+                  name: is_deleted
+                  valueBoolean: false
+        - insert:
+            tableName: users
+            columns:
+              - column:
+                  name: email
+                  value: "user3@example.com"
+              - column:
+                  name: password
+                  value: "password3"
+              - column:
+                  name: first_name
+                  value: "Alice"
+              - column:
+                  name: last_name
+                  value: "Johnson"
+              - column:
+                  name: shipping_address
+                  value: "789 Oak St, Anothertown"
+              - column:
+                  name: is_deleted
+                  valueBoolean: false
