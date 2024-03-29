@@ -1,5 +1,6 @@
 package store.bookshop.controller;
 
+import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -20,6 +21,7 @@ public class AuthenticationController {
     private final UserService userService;
 
     @PostMapping("/registration")
+    @Operation(summary = "Registration", description = "Create a new User")
     public UserDto registerUser(@RequestBody @Valid CreateUserRequestDto requestDto)
             throws RegistrationException {
         return userService.register(requestDto);
