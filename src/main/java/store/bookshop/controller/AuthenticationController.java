@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import store.bookshop.dto.user.CreateUserRequestDto;
 import store.bookshop.dto.user.UserDto;
-import store.bookshop.exeption.RegistrationException;
+import store.bookshop.exception.RegistrationException;
 import store.bookshop.service.user.UserService;
 
 @Tag(name = "User manager", description = "Endpoint for managing users")

@@ -6,7 +6,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import store.bookshop.dto.user.CreateUserRequestDto;
 import store.bookshop.dto.user.UserDto;
-import store.bookshop.exeption.RegistrationException;
+import store.bookshop.exception.RegistrationException;
 import store.bookshop.mapper.UserMapper;
 import store.bookshop.model.User;
 import store.bookshop.repository.UserRepository;

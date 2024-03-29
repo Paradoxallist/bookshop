@@ -1,4 +1,4 @@
-package store.bookshop.exeption;
+package store.bookshop.exception;
 
 import jakarta.validation.ConstraintViolation;
 import jakarta.validation.ConstraintViolationException;

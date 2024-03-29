@@ -8,7 +8,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import store.bookshop.dto.book.BookDto;
 import store.bookshop.dto.book.CreateBookRequestDto;
-import store.bookshop.exeption.EntityNotFoundException;
+import store.bookshop.exception.EntityNotFoundException;
 import store.bookshop.mapper.BookMapper;
 import store.bookshop.model.Book;
 import store.bookshop.repository.BookRepository;
