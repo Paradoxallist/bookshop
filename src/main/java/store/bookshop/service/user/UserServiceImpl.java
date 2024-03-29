@@ -1,6 +1,8 @@
 package store.bookshop.service.user;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.crypto.factory.PasswordEncoderFactories;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import store.bookshop.dto.user.CreateUserRequestDto;
 import store.bookshop.dto.user.UserDto;
@@ -22,10 +24,15 @@ public class UserServiceImpl implements UserService {
         }
         User user = new User();
         user.setEmail(requestDto.getEmail());
-        user.setPassword(requestDto.getPassword());
         user.setFirstName(requestDto.getFirstName());
         user.setLastName(requestDto.getLastName());
         user.setShippingAddress(requestDto.getShippingAddress());
+
+        PasswordEncoder passwordEncoder =
+                PasswordEncoderFactories.createDelegatingPasswordEncoder();
+
+        user.setPassword(passwordEncoder.encode(requestDto.getPassword()));
+
         User savedUser = userRepository.save(user);
         return userMapper.toDto(savedUser);
     }
