@@ -16,6 +16,7 @@ import store.bookshop.repository.UserRepository;
 public class UserServiceImpl implements UserService {
     private final UserRepository userRepository;
     private final UserMapper userMapper;
+    private final PasswordEncoder passwordEncoder;
 
     @Override
     public UserDto register(CreateUserRequestDto requestDto) throws RegistrationException {
@@ -27,10 +28,6 @@ public class UserServiceImpl implements UserService {
         user.setFirstName(requestDto.getFirstName());
         user.setLastName(requestDto.getLastName());
         user.setShippingAddress(requestDto.getShippingAddress());
-
-        PasswordEncoder passwordEncoder =
-                PasswordEncoderFactories.createDelegatingPasswordEncoder();
-
         user.setPassword(passwordEncoder.encode(requestDto.getPassword()));
 
         User savedUser = userRepository.save(user);

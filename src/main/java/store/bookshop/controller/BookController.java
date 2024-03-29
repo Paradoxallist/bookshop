@@ -23,7 +23,7 @@ import store.bookshop.service.book.BookService;
 @Tag(name = "Book manager", description = "Endpoint for managing books")
 @RequiredArgsConstructor
 @RestController
-@RequestMapping(value = "/books")
+@RequestMapping("/books")
 public class BookController {
 
     private final BookService bookService;

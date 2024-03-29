@@ -16,7 +16,7 @@ import store.bookshop.service.user.UserService;
 @Tag(name = "User manager", description = "Endpoint for managing users")
 @RequiredArgsConstructor
 @RestController
-@RequestMapping(value = "/auth")
+@RequestMapping("/auth")
 public class AuthenticationController {
     private final UserService userService;
 
