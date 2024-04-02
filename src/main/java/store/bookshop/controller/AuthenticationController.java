@@ -11,7 +11,9 @@ import org.springframework.web.bind.annotation.RestController;
 import store.bookshop.dto.user.CreateUserRequestDto;
 import store.bookshop.dto.user.UserDto;
 import store.bookshop.dto.user.UserLoginRequestDto;
+import store.bookshop.dto.user.UserLoginResponseDto;
 import store.bookshop.exception.RegistrationException;
+import store.bookshop.security.AuthenticationService;
 import store.bookshop.service.user.UserService;
 
 @Tag(name = "User manager", description = "Endpoint for managing users")
@@ -20,6 +22,7 @@ import store.bookshop.service.user.UserService;
 @RequestMapping("/auth")
 public class AuthenticationController {
     private final UserService userService;
+    private final AuthenticationService authenticationService;
 
     @PostMapping("/registration")
     @Operation(summary = "Registration", description = "Create a new User")
@@ -30,7 +33,7 @@ public class AuthenticationController {
 
     @PostMapping("/login")
     @Operation(summary = "Login", description = "Login in account")
-    public boolean login(@RequestBody UserLoginRequestDto requestDto) {
-        return true;
+    public UserLoginResponseDto login(@RequestBody UserLoginRequestDto requestDto) {
+        return authenticationService.authenticate(requestDto);
     }
 }
