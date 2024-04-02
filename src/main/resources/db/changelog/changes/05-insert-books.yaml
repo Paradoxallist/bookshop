@@ -1,6 +1,6 @@
 databaseChangeLog:
   - changeSet:
-      id: 02-insert-books
+      id: 05-insert-books
       author: Yevhenii_Liashenko
       changes:
         - insert:
