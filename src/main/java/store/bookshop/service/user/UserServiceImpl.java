@@ -1,5 +1,10 @@
 package store.bookshop.service.user;
 
+import java.util.Collection;
+import java.util.Collections;
+import java.util.LinkedHashSet;
+import java.util.List;
+import java.util.Set;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -7,13 +12,16 @@ import store.bookshop.dto.user.CreateUserRequestDto;
 import store.bookshop.dto.user.UserDto;
 import store.bookshop.exception.RegistrationException;
 import store.bookshop.mapper.UserMapper;
+import store.bookshop.model.Role;
 import store.bookshop.model.User;
+import store.bookshop.repository.RoleRepository;
 import store.bookshop.repository.UserRepository;
 
 @Service
 @RequiredArgsConstructor
 public class UserServiceImpl implements UserService {
     private final UserRepository userRepository;
+    private final RoleRepository roleRepository;
     private final UserMapper userMapper;
     private final PasswordEncoder passwordEncoder;
 
@@ -28,8 +36,15 @@ public class UserServiceImpl implements UserService {
         user.setLastName(requestDto.getLastName());
         user.setShippingAddress(requestDto.getShippingAddress());
         user.setPassword(passwordEncoder.encode(requestDto.getPassword()));
+        user.setRoles(Collections.singleton(roleRepository.findByRole(Role.RoleName.ROLE_USER)));
 
         User savedUser = userRepository.save(user);
         return userMapper.toDto(savedUser);
+    }
+
+    public UserDto findByEmail(String email) {
+        return userRepository.findByEmail(email)
+                .map(userMapper::toDto)
+                .orElseThrow(() -> new RuntimeException("Can't find user by email: " + email));
     }
 }
