@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import store.bookshop.dto.user.CreateUserRequestDto;
 import store.bookshop.dto.user.UserDto;
+import store.bookshop.dto.user.UserLoginRequestDto;
 import store.bookshop.exception.RegistrationException;
 import store.bookshop.service.user.UserService;
 
@@ -25,5 +26,11 @@ public class AuthenticationController {
     public UserDto registerUser(@RequestBody @Valid CreateUserRequestDto requestDto)
             throws RegistrationException {
         return userService.register(requestDto);
+    }
+
+    @PostMapping("/login")
+    @Operation(summary = "Login", description = "Login in account")
+    public boolean login(@RequestBody UserLoginRequestDto requestDto) {
+        return true;
     }
 }
