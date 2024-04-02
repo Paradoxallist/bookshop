@@ -1,7 +1,7 @@
 databaseChangeLog:
   - changeSet:
-      id: create-roles-table-001-adjusted
-      author: your_name
+      id: 02-create-roles-table
+      author: Yevhenii_Liashenko
       changes:
         - createTable:
             tableName: roles

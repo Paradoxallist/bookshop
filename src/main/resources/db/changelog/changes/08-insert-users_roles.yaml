@@ -1,6 +1,6 @@
 databaseChangeLog:
   - changeSet:
-      id: 07-insert-users_roles
+      id: 08-insert-users_roles
       author: Yevhenii_Liashenko
       changes:
         - insert:

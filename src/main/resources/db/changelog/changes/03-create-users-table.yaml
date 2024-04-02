@@ -1,6 +1,6 @@
 databaseChangeLog:
   - changeSet:
-      id: 03-create-users-table-01
+      id: 03-create-users-table
       author: Yevhenii_Liashenko
       changes:
         - createTable:
