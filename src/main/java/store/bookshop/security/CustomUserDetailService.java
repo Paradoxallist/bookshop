@@ -11,6 +11,7 @@ import store.bookshop.repository.UserRepository;
 @RequiredArgsConstructor
 public class CustomUserDetailService implements UserDetailsService {
     private final UserRepository userRepository;
+
     @Override
     public UserDetails loadUserByUsername(String email)
             throws UsernameNotFoundException {
