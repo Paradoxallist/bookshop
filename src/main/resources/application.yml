@@ -17,3 +17,6 @@ server:
   servlet:
     context-path: /api
   port: 8081
+jwt:
+  expiration: 300000
+  secret: secretKeysf9yh329rjfdfdds7fgertfsdg5454ggvv45v45g4g545gv45v45vv45v54v54dxsd
