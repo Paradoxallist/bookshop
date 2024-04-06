@@ -50,7 +50,7 @@ public class CategoryServiceImpl implements CategoryService {
     }
 
     @Override
-    public CategoryDto update(Long id, CreateCategoryRequestDto requestDto) {
+    public CategoryDto updateById(Long id, CreateCategoryRequestDto requestDto) {
         if (!categoryRepository.existsById(id)) {
             throw new EntityNotFoundException("Book doesn't exist with id: " + id);
         }

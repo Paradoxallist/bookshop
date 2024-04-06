@@ -62,7 +62,7 @@ public class CategoryController {
     @Operation(summary = "Update category by id")
     public CategoryDto updateCategoryById(@PathVariable("id") Long id,
                                           @RequestBody CreateCategoryRequestDto requestDto) {
-        return categoryService.update(id, requestDto);
+        return categoryService.updateById(id, requestDto);
     }
 
     @DeleteMapping("/{id}")
