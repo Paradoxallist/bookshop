@@ -25,7 +25,6 @@ import store.bookshop.service.category.CategoryService;
 @RestController
 @RequestMapping("/categories")
 public class CategoryController {
-
     private final CategoryService categoryService;
 
     @GetMapping

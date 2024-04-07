@@ -1,10 +1,8 @@
 package store.bookshop.dto.category;
 
-import lombok.Getter;
-import lombok.Setter;
+import lombok.Data;
 
-@Getter
-@Setter
+@Data
 public class CreateCategoryRequestDto {
     private String name;
     private String description;

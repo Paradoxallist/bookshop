@@ -1,7 +1,7 @@
 package store.bookshop.service.category;
 
+import jakarta.transaction.Transactional;
 import java.util.List;
-import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import store.bookshop.dto.book.BookDto;
@@ -24,9 +24,7 @@ public class CategoryServiceImpl implements CategoryService {
 
     @Override
     public List<CategoryDto> findAll() {
-        return categoryRepository.findAll().stream()
-                .map(categoryMapper::toDto)
-                .collect(Collectors.toList());
+        return categoryMapper.toDtoList(categoryRepository.findAll());
     }
 
     @Override
@@ -38,9 +36,7 @@ public class CategoryServiceImpl implements CategoryService {
 
     @Override
     public List<BookDto> getBooksByCategoryId(Long id) {
-        return bookRepository.findByCategories_Id(id).stream()
-                .map(bookMapper::toDto)
-                .toList();
+        return bookMapper.toDtoList(bookRepository.findByCategories_Id(id));
     }
 
     @Override
@@ -50,6 +46,7 @@ public class CategoryServiceImpl implements CategoryService {
     }
 
     @Override
+    @Transactional
     public CategoryDto updateById(Long id, CreateCategoryRequestDto requestDto) {
         if (!categoryRepository.existsById(id)) {
             throw new EntityNotFoundException("Book doesn't exist with id: " + id);

@@ -1,11 +1,9 @@
 package store.bookshop.dto.book;
 
 import java.math.BigDecimal;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.Data;
 
-@Getter
-@Setter
+@Data
 public class CreateBookRequestDto {
     private String title;
     private String author;
