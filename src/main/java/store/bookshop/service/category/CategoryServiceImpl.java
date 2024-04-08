@@ -36,7 +36,7 @@ public class CategoryServiceImpl implements CategoryService {
 
     @Override
     public List<BookDto> getBooksByCategoryId(Long id) {
-        return bookMapper.toDtoList(bookRepository.findByCategories_Id(id));
+        return bookMapper.toDtoList(bookRepository.findAllByCategoryId(id));
     }
 
     @Override
