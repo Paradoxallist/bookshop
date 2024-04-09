@@ -42,7 +42,7 @@ public class BookServiceImpl implements BookService {
     @Override
     @Transactional
     public BookDto updateById(CreateBookRequestDto requestDto, Long id) {
-        if (bookRepository.findById(id).isEmpty()) {
+        if (!bookRepository.existsById(id)) {
             throw new EntityNotFoundException("Book doesn't exist with id: " + id);
         }
         Book book = bookMapper.toModel(requestDto);
