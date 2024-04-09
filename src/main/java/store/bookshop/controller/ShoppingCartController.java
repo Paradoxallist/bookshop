@@ -53,8 +53,9 @@ public class ShoppingCartController {
     @PutMapping("/cart-items/{cartItemId}")
     @PreAuthorize("hasRole('ROLE_USER') or hasRole('ROLE_ADMIN')")
     @Operation(summary = "Update category by id")
-    public CartItemQuantity updateShoppingCartById(@PathVariable("cartItemId") Long id,
-                                                   @RequestBody UpdateCartItemRequestDto requestDto) {
+    public CartItemQuantity updateShoppingCartById(
+            @PathVariable("cartItemId") Long id,
+            @RequestBody UpdateCartItemRequestDto requestDto) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         User user = (User) authentication.getPrincipal();
         return shoppingCartService.updateById(user.getId(), id, requestDto);
