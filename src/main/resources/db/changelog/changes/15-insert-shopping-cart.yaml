@@ -1,0 +1,32 @@
+databaseChangeLog:
+  - changeSet:
+      id: 15-insert-shopping-cart
+      author: Yevhenii_Liashenko
+      changes:
+        - insert:
+            tableName: shopping_carts
+            columns:
+              - column:
+                  name: id
+                  valueNumeric: 1
+              - column:
+                  name: users_id
+                  valueNumeric: 1
+        - insert:
+            tableName: shopping_carts
+            columns:
+              - column:
+                  name: id
+                  valueNumeric: 2
+              - column:
+                  name: users_id
+                  valueNumeric: 2
+        - insert:
+            tableName: shopping_carts
+            columns:
+              - column:
+                  name: id
+                  valueNumeric: 3
+              - column:
+                  name: users_id
+                  valueNumeric: 3
