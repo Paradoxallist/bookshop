@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import store.bookshop.dto.shoppingcart.CartItemDto;
+import store.bookshop.dto.shoppingcart.CartItemQuantity;
 import store.bookshop.dto.shoppingcart.CreateCartItemRequestDto;
 import store.bookshop.dto.shoppingcart.ShoppingCartDto;
 import store.bookshop.dto.shoppingcart.UpdateCartItemRequestDto;
@@ -62,17 +63,17 @@ public class ShoppingCartServiceImpl implements ShoppingCartService {
 
     @Override
     @Transactional
-    public CartItemDto updateById(Long userId, Long id, UpdateCartItemRequestDto requestDto) {
+    public CartItemQuantity updateById(Long userId, Long id, UpdateCartItemRequestDto requestDto) {
         if (!cartItemRepository.existsById(id)) {
             throw new EntityNotFoundException("CartItem doesn't exist with id: " + id);
         }
 
         userComplianceCheck(userId, id);
-
         CartItem cartItem = cartItemRepository.getReferenceById(id);
         cartItem.setQuantity(requestDto.getQuantity());
+        CartItem savedCartItem = cartItemRepository.save(cartItem);
 
-        return cartItemMapper.toDto(cartItemRepository.save(cartItem));
+        return new CartItemQuantity(savedCartItem.getQuantity());
     }
 
     @Override

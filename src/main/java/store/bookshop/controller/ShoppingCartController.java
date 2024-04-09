@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 import store.bookshop.dto.shoppingcart.CartItemDto;
+import store.bookshop.dto.shoppingcart.CartItemQuantity;
 import store.bookshop.dto.shoppingcart.CreateCartItemRequestDto;
 import store.bookshop.dto.shoppingcart.ShoppingCartDto;
 import store.bookshop.dto.shoppingcart.UpdateCartItemRequestDto;
@@ -52,8 +53,8 @@ public class ShoppingCartController {
     @PutMapping("/cart-items/{cartItemId}")
     @PreAuthorize("hasRole('ROLE_USER') or hasRole('ROLE_ADMIN')")
     @Operation(summary = "Update category by id")
-    public CartItemDto updateShoppingCartById(@PathVariable("cartItemId") Long id,
-                                              @RequestBody UpdateCartItemRequestDto requestDto) {
+    public CartItemQuantity updateShoppingCartById(@PathVariable("cartItemId") Long id,
+                                                   @RequestBody UpdateCartItemRequestDto requestDto) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         User user = (User) authentication.getPrincipal();
         return shoppingCartService.updateById(user.getId(), id, requestDto);

@@ -1,6 +1,7 @@
 package store.bookshop.service.shoppingcart;
 
 import store.bookshop.dto.shoppingcart.CartItemDto;
+import store.bookshop.dto.shoppingcart.CartItemQuantity;
 import store.bookshop.dto.shoppingcart.CreateCartItemRequestDto;
 import store.bookshop.dto.shoppingcart.ShoppingCartDto;
 import store.bookshop.dto.shoppingcart.UpdateCartItemRequestDto;
@@ -14,7 +15,7 @@ public interface ShoppingCartService {
 
     CartItemDto save(Long userId, CreateCartItemRequestDto requestDto);
 
-    CartItemDto updateById(Long userId, Long id, UpdateCartItemRequestDto requestDto);
+    CartItemQuantity updateById(Long userId, Long id, UpdateCartItemRequestDto requestDto);
 
     void deleteById(Long userId, Long cartItemId);
 }
