@@ -28,21 +28,21 @@ public class CategoryController {
     private final CategoryService categoryService;
 
     @GetMapping
-    @PreAuthorize("hasRole('ROLE_USER') or hasRole('ROLE_ADMIN')")
+    @PreAuthorize("hasAnyRole('ROLE_USER', 'ROLE_ADMIN')")
     @Operation(summary = "Get all categories")
     public List<CategoryDto> getAll() {
         return categoryService.findAll();
     }
 
     @GetMapping("/{id}")
-    @PreAuthorize("hasRole('ROLE_USER') or hasRole('ROLE_ADMIN')")
+    @PreAuthorize("hasAnyRole('ROLE_USER', 'ROLE_ADMIN')")
     @Operation(summary = "Get category by id")
     public CategoryDto getCategoryById(@PathVariable("id") Long id) {
         return categoryService.getById(id);
     }
 
     @GetMapping("/{id}/books")
-    @PreAuthorize("hasRole('ROLE_USER') or hasRole('ROLE_ADMIN')")
+    @PreAuthorize("hasAnyRole('ROLE_USER', 'ROLE_ADMIN')")
     @Operation(summary = "Get books by categoryId")
     public List<BookDto> getBooksByCategoryId(@PathVariable("id") Long id) {
         return categoryService.getBooksByCategoryId(id);

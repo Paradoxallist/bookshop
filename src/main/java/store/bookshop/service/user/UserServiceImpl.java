@@ -1,5 +1,6 @@
 package store.bookshop.service.user;
 
+import jakarta.transaction.Transactional;
 import java.util.Collections;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -12,6 +13,7 @@ import store.bookshop.model.Role;
 import store.bookshop.model.User;
 import store.bookshop.repository.RoleRepository;
 import store.bookshop.repository.UserRepository;
+import store.bookshop.service.shoppingcart.ShoppingCartService;
 
 @Service
 @RequiredArgsConstructor
@@ -21,7 +23,10 @@ public class UserServiceImpl implements UserService {
     private final UserMapper userMapper;
     private final PasswordEncoder passwordEncoder;
 
+    private final ShoppingCartService shoppingCartService;
+
     @Override
+    @Transactional
     public UserDto register(CreateUserRequestDto requestDto) throws RegistrationException {
         if (userRepository.findByEmail(requestDto.getEmail()).isPresent()) {
             throw new RegistrationException("Can't register user");
@@ -35,6 +40,8 @@ public class UserServiceImpl implements UserService {
         user.setRoles(Collections.singleton(roleRepository.findByRole(Role.RoleName.ROLE_USER)));
 
         User savedUser = userRepository.save(user);
+        shoppingCartService.createShoppingCart(savedUser);
+
         return userMapper.toDto(savedUser);
     }
 
