@@ -79,7 +79,7 @@ public class ShoppingCartServiceImpl implements ShoppingCartService {
     @Transactional
     public void deleteById(Long userId, Long cartItemId) {
         userComplianceCheck(userId, cartItemId);
-        cartItemRepository.deleteByIdCustom(cartItemId);
+        cartItemRepository.deleteById(cartItemId);
     }
 
     private void userComplianceCheck(Long userId, Long cartItemId) {

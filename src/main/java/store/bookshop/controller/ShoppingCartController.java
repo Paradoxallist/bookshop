@@ -31,7 +31,7 @@ public class ShoppingCartController {
     private final ShoppingCartService shoppingCartService;
 
     @GetMapping
-    @PreAuthorize("hasRole('ROLE_USER') or hasRole('ROLE_ADMIN')")
+    @PreAuthorize("hasAnyRole('ROLE_USER', 'ROLE_ADMIN')")
     @Operation(summary = "Get shopping cart user")
     public ShoppingCartDto getAll() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
@@ -40,7 +40,7 @@ public class ShoppingCartController {
     }
 
     @PostMapping
-    @PreAuthorize("hasRole('ROLE_USER') or hasRole('ROLE_ADMIN')")
+    @PreAuthorize("hasAnyRole('ROLE_USER', 'ROLE_ADMIN')")
     @ResponseStatus(HttpStatus.CREATED)
     @Operation(summary = "Add a book to the shopping cart.")
     public CartItemDto addShoppingCart(@RequestBody CreateCartItemRequestDto requestDto) {
@@ -50,7 +50,7 @@ public class ShoppingCartController {
     }
 
     @PutMapping("/cart-items/{cartItemId}")
-    @PreAuthorize("hasRole('ROLE_USER') or hasRole('ROLE_ADMIN')")
+    @PreAuthorize("hasAnyRole('ROLE_USER', 'ROLE_ADMIN')")
     @Operation(summary = "Update category by id")
     public CartItemDto updateShoppingCartById(@PathVariable("cartItemId") Long id,
                                               @RequestBody UpdateCartItemRequestDto requestDto) {
@@ -60,7 +60,7 @@ public class ShoppingCartController {
     }
 
     @DeleteMapping("/cart-items/{cartItemId}")
-    @PreAuthorize("hasRole('ROLE_USER') or hasRole('ROLE_ADMIN')")
+    @PreAuthorize("hasAnyRole('ROLE_USER', 'ROLE_ADMIN')")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     @Operation(summary = "Update category by id")
     public void deleteShoppingCartById(@PathVariable("cartItemId") Long cartItemId) {
