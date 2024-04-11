@@ -3,8 +3,10 @@ package store.bookshop.service.order;
 import jakarta.transaction.Transactional;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import store.bookshop.dto.order.CreateOrderRequestDto;
@@ -14,8 +16,10 @@ import store.bookshop.dto.order.UpdateOrderRequestDto;
 import store.bookshop.exception.EntityNotFoundException;
 import store.bookshop.mapper.OrderItemMapper;
 import store.bookshop.mapper.OrderMapper;
+import store.bookshop.model.Book;
 import store.bookshop.model.Order;
 import store.bookshop.model.OrderItem;
+import store.bookshop.repository.BookRepository;
 import store.bookshop.repository.OrderItemRepository;
 import store.bookshop.repository.OrderRepository;
 import store.bookshop.repository.UserRepository;
@@ -29,6 +33,7 @@ public class OrderServiceImpl implements OrderService {
     private final OrderItemRepository orderItemRepository;
     private final OrderMapper orderMapper;
     private final OrderItemMapper orderItemMapper;
+    private final BookRepository bookRepository;
 
     @Override
     public List<OrderDto> findAll(Long userId) {
@@ -39,12 +44,33 @@ public class OrderServiceImpl implements OrderService {
     @Transactional
     public OrderDto createOrder(Long userId, CreateOrderRequestDto requestDto) {
         Order newOrder = new Order();
-        newOrder.setTotal(BigDecimal.valueOf(0));
+
+        List<OrderItem> orderItems = orderItemMapper.toModelList(requestDto.getOrderItems());
+        BigDecimal total = new BigDecimal(0);
+        for (OrderItem orderItem : orderItems) {
+            orderItem.setOrder(newOrder);
+            Book book = bookRepository.findById(orderItem.getBook().getId()).orElseThrow(
+                    () -> new EntityNotFoundException("Can't find book by id: " + orderItem.getBook().getId()));
+            BigDecimal price = book.getPrice();
+            BigDecimal bookPrices = price.multiply(BigDecimal.valueOf(orderItem.getQuantity()));
+            total = total.add(bookPrices);
+            orderItem.setPrice(price);
+        }
+
+        newOrder.setTotal(total);
         newOrder.setOrderDate(LocalDateTime.now());
         newOrder.setUser(userRepository.getReferenceById(userId));
         newOrder.setStatus(Order.Status.COMPLETED);
         newOrder.setShippingAddress(requestDto.getShippingAddress());
         Order save = orderRepository.save(newOrder);
+
+        for (OrderItem orderItem : orderItems) {
+            orderItemRepository.save(orderItem);
+        }
+
+        Set<OrderItem> orderItemSet = new LinkedHashSet<>(orderItems);
+        save.setOrderItems(orderItemSet);
+
         return orderMapper.toDto(save);
     }
 
@@ -61,28 +87,15 @@ public class OrderServiceImpl implements OrderService {
 
     @Override
     public List<OrderItemDto> getOrderItems(Long userId, Long orderId) {
-        userComplianceCheck(userId, orderId);
-        return orderItemMapper.toDtoList(orderItemRepository.findByOrderId(orderId));
+        return orderItemMapper.toDtoList(orderItemRepository.findByUserIdAndOrderId(userId, orderId));
     }
 
     @Override
     public OrderItemDto getOrderItemByOrderIdAndItemId(Long userId, Long orderId, Long itemId) {
-        userComplianceCheck(userId, orderId);
-        List<OrderItem> orderItemList = orderItemRepository.findByOrderId(orderId);
-        Optional<OrderItem> orderItem = orderItemList.stream()
-                .filter(item -> item.getId().equals(itemId))
-                .findFirst();
+        Optional<OrderItem> orderItem = orderItemRepository.findByUserIdAndOrderIdAndItemId(userId, orderId, itemId);
         if (orderItem.isEmpty()) {
             throw new EntityNotFoundException("Can't find OrderItem by id: " + itemId);
         }
         return orderItemMapper.toDto(orderItem.get());
-    }
-
-    private void userComplianceCheck(Long userId, Long orderId) {
-        List<Order> orderList = orderRepository.findByUserId(userId);
-        if (orderList.stream()
-                .noneMatch(order -> order.getId().equals(orderId))) {
-            throw new SecurityException("This user does not have access to this order");
-        }
     }
 }
