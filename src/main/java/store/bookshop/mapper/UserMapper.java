@@ -5,7 +5,6 @@ import org.mapstruct.Named;
 import store.bookshop.config.MapperConfig;
 import store.bookshop.dto.user.CreateUserRequestDto;
 import store.bookshop.dto.user.UserDto;
-import store.bookshop.model.Book;
 import store.bookshop.model.User;
 
 @Mapper(config = MapperConfig.class)

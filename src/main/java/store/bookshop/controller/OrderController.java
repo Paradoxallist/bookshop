@@ -12,7 +12,6 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
@@ -70,11 +69,11 @@ public class OrderController {
         return orderService.getOrderItemByOrderIdAndItemId(user.getId(), orderId, itemId);
     }
 
-
     @PatchMapping("/{id}")
     @PreAuthorize("hasRole('ROLE_ADMIN')")
     @Operation(summary = "Update order")
-    public OrderDto UpdateOrderById(@RequestBody UpdateOrderRequestDto requestDto, @PathVariable("id") Long orderId) {
+    public OrderDto updateOrderById(@RequestBody UpdateOrderRequestDto requestDto,
+                                    @PathVariable("id") Long orderId) {
         return orderService.update(orderId, requestDto);
     }
 }
