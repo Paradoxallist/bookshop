@@ -61,7 +61,7 @@ public class OrderController {
 
     @GetMapping("/{orderId}/items/{itemId}")
     @PreAuthorize("hasAnyRole('ROLE_USER', 'ROLE_ADMIN')")
-    @Operation(summary = "Get order items by id")
+    @Operation(summary = "Get order item by id")
     public OrderItemDto getOrderItem(@PathVariable("orderId") Long orderId,
                                      @PathVariable("itemId") Long itemId) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
