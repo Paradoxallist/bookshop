@@ -50,7 +50,8 @@ public class OrderServiceImpl implements OrderService {
         for (OrderItem orderItem : orderItems) {
             orderItem.setOrder(newOrder);
             Book book = bookRepository.findById(orderItem.getBook().getId()).orElseThrow(
-                    () -> new EntityNotFoundException("Can't find book by id: " + orderItem.getBook().getId()));
+                    () -> new EntityNotFoundException("Can't find book by id: "
+                            + orderItem.getBook().getId()));
             BigDecimal price = book.getPrice();
             BigDecimal bookPrices = price.multiply(BigDecimal.valueOf(orderItem.getQuantity()));
             total = total.add(bookPrices);
@@ -76,7 +77,8 @@ public class OrderServiceImpl implements OrderService {
 
     @Override
     @Transactional
-    public OrderDto update(Long orderId, UpdateOrderRequestDto requestDto) {
+    public OrderDto update(Long orderId,
+                           UpdateOrderRequestDto requestDto) {
         if (!orderRepository.existsById(orderId)) {
             throw new EntityNotFoundException("Can't find Order by id: " + orderId);
         }
@@ -87,12 +89,16 @@ public class OrderServiceImpl implements OrderService {
 
     @Override
     public List<OrderItemDto> getOrderItems(Long userId, Long orderId) {
-        return orderItemMapper.toDtoList(orderItemRepository.findByUserIdAndOrderId(userId, orderId));
+        return orderItemMapper.toDtoList(
+                orderItemRepository.findByUserIdAndOrderId(userId, orderId));
     }
 
     @Override
-    public OrderItemDto getOrderItemByOrderIdAndItemId(Long userId, Long orderId, Long itemId) {
-        Optional<OrderItem> orderItem = orderItemRepository.findByUserIdAndOrderIdAndItemId(userId, orderId, itemId);
+    public OrderItemDto getOrderItemByOrderIdAndItemId(Long userId,
+                                                       Long orderId,
+                                                       Long itemId) {
+        Optional<OrderItem> orderItem =
+                orderItemRepository.findByUserIdAndOrderIdAndItemId(userId, orderId, itemId);
         if (orderItem.isEmpty()) {
             throw new EntityNotFoundException("Can't find OrderItem by id: " + itemId);
         }

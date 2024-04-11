@@ -8,10 +8,19 @@ import org.springframework.data.repository.query.Param;
 import store.bookshop.model.OrderItem;
 
 public interface OrderItemRepository extends JpaRepository<OrderItem, Long> {
-    List<OrderItem> findByOrderId(Long orderId);
-    @Query("SELECT oi FROM OrderItem oi JOIN oi.order o WHERE o.user.id = :userId AND o.id = :orderId AND oi.id = :itemId")
-    Optional<OrderItem> findByUserIdAndOrderIdAndItemId(@Param("userId") Long userId, @Param("orderId") Long orderId, @Param("itemId") Long itemId);
 
-    @Query("SELECT oi FROM OrderItem oi JOIN oi.order o WHERE o.user.id = :userId AND o.id = :orderId")
-    List<OrderItem> findByUserIdAndOrderId(@Param("userId") Long userId, @Param("orderId") Long orderId);
+    @Query("SELECT oi "
+            + "FROM OrderItem oi "
+            + "JOIN oi.order o "
+            + "WHERE o.user.id = :userId AND o.id = :orderId AND oi.id = :itemId")
+    Optional<OrderItem> findByUserIdAndOrderIdAndItemId(@Param("userId") Long userId,
+                                                        @Param("orderId") Long orderId,
+                                                        @Param("itemId") Long itemId);
+
+    @Query("SELECT oi "
+            + "FROM OrderItem oi "
+            + "JOIN oi.order o "
+            + "WHERE o.user.id = :userId AND o.id = :orderId")
+    List<OrderItem> findByUserIdAndOrderId(@Param("userId") Long userId,
+                                           @Param("orderId") Long orderId);
 }
