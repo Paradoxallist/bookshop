@@ -9,7 +9,6 @@ import store.bookshop.model.Order;
 
 @Mapper(config = MapperConfig.class, uses = OrderItemMapper.class)
 public interface OrderMapper {
-
     @Mapping(target = "userId", source = "user.id")
     OrderDto toDto(Order order);
 
