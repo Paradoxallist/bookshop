@@ -8,7 +8,6 @@ import org.springframework.data.repository.query.Param;
 import store.bookshop.model.OrderItem;
 
 public interface OrderItemRepository extends JpaRepository<OrderItem, Long> {
-
     @Query("SELECT oi "
             + "FROM OrderItem oi "
             + "JOIN oi.order o "

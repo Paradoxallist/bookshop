@@ -27,7 +27,6 @@ import store.bookshop.repository.UserRepository;
 @Service
 @RequiredArgsConstructor
 public class OrderServiceImpl implements OrderService {
-
     private final OrderRepository orderRepository;
     private final UserRepository userRepository;
     private final OrderItemRepository orderItemRepository;
@@ -77,8 +76,7 @@ public class OrderServiceImpl implements OrderService {
 
     @Override
     @Transactional
-    public OrderDto update(Long orderId,
-                           UpdateOrderRequestDto requestDto) {
+    public OrderDto update(Long orderId, UpdateOrderRequestDto requestDto) {
         if (!orderRepository.existsById(orderId)) {
             throw new EntityNotFoundException("Can't find Order by id: " + orderId);
         }
@@ -94,9 +92,11 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
-    public OrderItemDto getOrderItemByOrderIdAndItemId(Long userId,
-                                                       Long orderId,
-                                                       Long itemId) {
+    public OrderItemDto getOrderItemByOrderIdAndItemId(
+            Long userId,
+            Long orderId,
+            Long itemId
+    ) {
         Optional<OrderItem> orderItem =
                 orderItemRepository.findByUserIdAndOrderIdAndItemId(userId, orderId, itemId);
         if (orderItem.isEmpty()) {

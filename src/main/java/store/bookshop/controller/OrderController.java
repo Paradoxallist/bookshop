@@ -28,7 +28,6 @@ import store.bookshop.service.order.OrderService;
 @RestController
 @RequestMapping("/orders")
 public class OrderController {
-
     private final OrderService orderService;
 
     @GetMapping
