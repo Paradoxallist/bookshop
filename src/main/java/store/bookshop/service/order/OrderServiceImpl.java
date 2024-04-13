@@ -28,6 +28,7 @@ import store.bookshop.repository.OrderItemRepository;
 import store.bookshop.repository.OrderRepository;
 import store.bookshop.repository.ShoppingCartRepository;
 import store.bookshop.repository.UserRepository;
+import store.bookshop.service.shoppingcart.ShoppingCartService;
 
 @Service
 @RequiredArgsConstructor
@@ -49,47 +50,71 @@ public class OrderServiceImpl implements OrderService {
     @Override
     @Transactional
     public OrderDto createOrder(Long userId, CreateOrderRequestDto requestDto) {
-        Order newOrder = new Order();
+        ShoppingCart shoppingCart = getShoppingCart(userId);
+        validateCartItems(shoppingCart);
 
-        ShoppingCart shoppingCart = shoppingCartRepository.findByUserId(userId);
-        Set<CartItem> cartItems = shoppingCart.getCartItems();
+        Order newOrder = buildOrder(userId, requestDto);
 
-        if (cartItems.isEmpty()) {
+        List<OrderItem> orderItems = createOrderItems(shoppingCart, newOrder);
+        BigDecimal total = calculateTotal(orderItems);
+        newOrder.setTotal(total);
+        newOrder.setOrderItems(new LinkedHashSet<>(orderItems));
+
+        Order savedOrder = orderRepository.save(newOrder);
+
+        return orderMapper.toDto(savedOrder);
+    }
+
+    private ShoppingCart getShoppingCart(Long userId) {
+        return shoppingCartRepository.findByUserId(userId);
+    }
+
+    private void validateCartItems(ShoppingCart shoppingCart) {
+        if (shoppingCart.getCartItems().isEmpty()) {
             throw new EntityNotFoundException("No CartItems to create order");
         }
+    }
 
-        List<OrderItem> orderItems = new ArrayList<>();
-        BigDecimal total = new BigDecimal(0);
-        for (CartItem cartItem : cartItems) {
-            OrderItem orderItem = new OrderItem();
-            orderItem.setOrder(newOrder);
-            Book book = bookRepository.findById(cartItem.getBook().getId()).orElseThrow(
-                    () -> new EntityNotFoundException("Can't find book by id: "
-                            + cartItem.getBook().getId()));
-            BigDecimal price = book.getPrice();
-            BigDecimal quantity = BigDecimal.valueOf(cartItem.getQuantity());
-            BigDecimal totalItemPrice = price.multiply(quantity);
-            total = total.add(totalItemPrice);
-            orderItem.setPrice(price);
-            orderItem.setBook(book);
-            orderItem.setQuantity(cartItem.getQuantity());
-
-            cartItemRepository.deleteById(cartItem.getId());
-            orderItems.add(orderItem);
-        }
-
-        Set<OrderItem> orderItemSet = new LinkedHashSet<>(orderItems);
-
-        newOrder.setTotal(total);
+    private Order buildOrder(Long userId, CreateOrderRequestDto requestDto) {
+        Order newOrder = new Order();
         newOrder.setOrderDate(LocalDateTime.now());
         newOrder.setUser(userRepository.getReferenceById(userId));
         newOrder.setStatus(Order.Status.COMPLETED);
         newOrder.setShippingAddress(requestDto.getShippingAddress());
-        newOrder.setOrderItems(orderItemSet);
+        return newOrder;
+    }
 
-        Order save = orderRepository.save(newOrder);
+    private List<OrderItem> createOrderItems(ShoppingCart shoppingCart, Order newOrder) {
+        List<OrderItem> orderItems = new ArrayList<>();
+        for (CartItem cartItem : shoppingCart.getCartItems()) {
+            OrderItem orderItem = createOrderItem(cartItem, newOrder);
+            orderItems.add(orderItem);
+            cartItemRepository.deleteById(cartItem.getId());
+        }
+        return orderItems;
+    }
 
-        return orderMapper.toDto(save);
+    private OrderItem createOrderItem(CartItem cartItem, Order newOrder) {
+        OrderItem orderItem = new OrderItem();
+        orderItem.setOrder(newOrder);
+        Book book = getBook(cartItem.getBook().getId());
+        BigDecimal price = book.getPrice();
+        int quantity = cartItem.getQuantity();
+        orderItem.setPrice(price);
+        orderItem.setBook(book);
+        orderItem.setQuantity(quantity);
+        return orderItem;
+    }
+
+    private Book getBook(Long bookId) {
+        return bookRepository.findById(bookId).orElseThrow(() ->
+                new EntityNotFoundException("Can't find book by id: " + bookId));
+    }
+
+    private BigDecimal calculateTotal(List<OrderItem> orderItems) {
+        return orderItems.stream()
+                .map(orderItem -> orderItem.getPrice().multiply(BigDecimal.valueOf(orderItem.getQuantity())))
+                .reduce(BigDecimal.ZERO, BigDecimal::add);
     }
 
     @Override
@@ -115,11 +140,9 @@ public class OrderServiceImpl implements OrderService {
             Long orderId,
             Long itemId
     ) {
-        Optional<OrderItem> orderItem =
-                orderItemRepository.findByUserIdAndOrderIdAndItemId(userId, orderId, itemId);
-        if (orderItem.isEmpty()) {
-            throw new EntityNotFoundException("Can't find OrderItem by id: " + itemId);
-        }
-        return orderItemMapper.toDto(orderItem.get());
+        OrderItem orderItem =
+                orderItemRepository.findByUserIdAndOrderIdAndItemId(userId, orderId, itemId)
+                        .orElseThrow(() -> new EntityNotFoundException("Can't find OrderItem by id: " + itemId));
+        return orderItemMapper.toDto(orderItem);
     }
 }
