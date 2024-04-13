@@ -6,8 +6,6 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.LinkedHashSet;
 import java.util.List;
-import java.util.Optional;
-import java.util.Set;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import store.bookshop.dto.order.CreateOrderRequestDto;
@@ -28,7 +26,6 @@ import store.bookshop.repository.OrderItemRepository;
 import store.bookshop.repository.OrderRepository;
 import store.bookshop.repository.ShoppingCartRepository;
 import store.bookshop.repository.UserRepository;
-import store.bookshop.service.shoppingcart.ShoppingCartService;
 
 @Service
 @RequiredArgsConstructor
@@ -113,7 +110,8 @@ public class OrderServiceImpl implements OrderService {
 
     private BigDecimal calculateTotal(List<OrderItem> orderItems) {
         return orderItems.stream()
-                .map(orderItem -> orderItem.getPrice().multiply(BigDecimal.valueOf(orderItem.getQuantity())))
+                .map(orderItem ->
+                        orderItem.getPrice().multiply(BigDecimal.valueOf(orderItem.getQuantity())))
                 .reduce(BigDecimal.ZERO, BigDecimal::add);
     }
 
@@ -142,7 +140,8 @@ public class OrderServiceImpl implements OrderService {
     ) {
         OrderItem orderItem =
                 orderItemRepository.findByUserIdAndOrderIdAndItemId(userId, orderId, itemId)
-                        .orElseThrow(() -> new EntityNotFoundException("Can't find OrderItem by id: " + itemId));
+                        .orElseThrow(() -> new EntityNotFoundException(
+                                "Can't find OrderItem by id: " + itemId));
         return orderItemMapper.toDto(orderItem);
     }
 }
