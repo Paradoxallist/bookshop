@@ -3,6 +3,7 @@ package store.bookshop.service.order;
 import jakarta.transaction.Transactional;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Optional;
@@ -17,11 +18,15 @@ import store.bookshop.exception.EntityNotFoundException;
 import store.bookshop.mapper.OrderItemMapper;
 import store.bookshop.mapper.OrderMapper;
 import store.bookshop.model.Book;
+import store.bookshop.model.CartItem;
 import store.bookshop.model.Order;
 import store.bookshop.model.OrderItem;
+import store.bookshop.model.ShoppingCart;
 import store.bookshop.repository.BookRepository;
+import store.bookshop.repository.CartItemRepository;
 import store.bookshop.repository.OrderItemRepository;
 import store.bookshop.repository.OrderRepository;
+import store.bookshop.repository.ShoppingCartRepository;
 import store.bookshop.repository.UserRepository;
 
 @Service
@@ -33,6 +38,8 @@ public class OrderServiceImpl implements OrderService {
     private final OrderMapper orderMapper;
     private final OrderItemMapper orderItemMapper;
     private final BookRepository bookRepository;
+    private final CartItemRepository cartItemRepository;
+    private final ShoppingCartRepository shoppingCartRepository;
 
     @Override
     public List<OrderDto> findAll(Long userId) {
@@ -44,32 +51,43 @@ public class OrderServiceImpl implements OrderService {
     public OrderDto createOrder(Long userId, CreateOrderRequestDto requestDto) {
         Order newOrder = new Order();
 
-        List<OrderItem> orderItems = orderItemMapper.toModelList(requestDto.getOrderItems());
-        BigDecimal total = new BigDecimal(0);
-        for (OrderItem orderItem : orderItems) {
-            orderItem.setOrder(newOrder);
-            Book book = bookRepository.findById(orderItem.getBook().getId()).orElseThrow(
-                    () -> new EntityNotFoundException("Can't find book by id: "
-                            + orderItem.getBook().getId()));
-            BigDecimal price = book.getPrice();
-            BigDecimal bookPrices = price.multiply(BigDecimal.valueOf(orderItem.getQuantity()));
-            total = total.add(bookPrices);
-            orderItem.setPrice(price);
+        ShoppingCart shoppingCart = shoppingCartRepository.findByUserId(userId);
+        Set<CartItem> cartItems = shoppingCart.getCartItems();
+
+        if (cartItems.isEmpty()) {
+            throw new EntityNotFoundException("No CartItems to create order");
         }
+
+        List<OrderItem> orderItems = new ArrayList<>();
+        BigDecimal total = new BigDecimal(0);
+        for (CartItem cartItem : cartItems) {
+            OrderItem orderItem = new OrderItem();
+            orderItem.setOrder(newOrder);
+            Book book = bookRepository.findById(cartItem.getBook().getId()).orElseThrow(
+                    () -> new EntityNotFoundException("Can't find book by id: "
+                            + cartItem.getBook().getId()));
+            BigDecimal price = book.getPrice();
+            BigDecimal quantity = BigDecimal.valueOf(cartItem.getQuantity());
+            BigDecimal totalItemPrice = price.multiply(quantity);
+            total = total.add(totalItemPrice);
+            orderItem.setPrice(price);
+            orderItem.setBook(book);
+            orderItem.setQuantity(cartItem.getQuantity());
+
+            cartItemRepository.deleteById(cartItem.getId());
+            orderItems.add(orderItem);
+        }
+
+        Set<OrderItem> orderItemSet = new LinkedHashSet<>(orderItems);
 
         newOrder.setTotal(total);
         newOrder.setOrderDate(LocalDateTime.now());
         newOrder.setUser(userRepository.getReferenceById(userId));
         newOrder.setStatus(Order.Status.COMPLETED);
         newOrder.setShippingAddress(requestDto.getShippingAddress());
+        newOrder.setOrderItems(orderItemSet);
+
         Order save = orderRepository.save(newOrder);
-
-        for (OrderItem orderItem : orderItems) {
-            orderItemRepository.save(orderItem);
-        }
-
-        Set<OrderItem> orderItemSet = new LinkedHashSet<>(orderItems);
-        save.setOrderItems(orderItemSet);
 
         return orderMapper.toDto(save);
     }
