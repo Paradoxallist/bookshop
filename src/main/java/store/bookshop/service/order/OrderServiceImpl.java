@@ -62,6 +62,36 @@ public class OrderServiceImpl implements OrderService {
         return orderMapper.toDto(savedOrder);
     }
 
+    @Override
+    @Transactional
+    public OrderDto update(Long orderId, UpdateOrderRequestDto requestDto) {
+        if (!orderRepository.existsById(orderId)) {
+            throw new EntityNotFoundException("Can't find Order by id: " + orderId);
+        }
+        Order order = orderRepository.getReferenceById(orderId);
+        order.setStatus(requestDto.getStatus());
+        return orderMapper.toDto(orderRepository.save(order));
+    }
+
+    @Override
+    public List<OrderItemDto> getOrderItems(Long userId, Long orderId) {
+        return orderItemMapper.toDtoList(
+                orderItemRepository.findByUserIdAndOrderId(userId, orderId));
+    }
+
+    @Override
+    public OrderItemDto getOrderItemByOrderIdAndItemId(
+            Long userId,
+            Long orderId,
+            Long itemId
+    ) {
+        OrderItem orderItem =
+                orderItemRepository.findByUserIdAndOrderIdAndItemId(userId, orderId, itemId)
+                        .orElseThrow(() -> new EntityNotFoundException(
+                                "Can't find OrderItem by id: " + itemId));
+        return orderItemMapper.toDto(orderItem);
+    }
+
     private ShoppingCart getShoppingCart(Long userId) {
         return shoppingCartRepository.findByUserId(userId);
     }
@@ -113,35 +143,5 @@ public class OrderServiceImpl implements OrderService {
                 .map(orderItem ->
                         orderItem.getPrice().multiply(BigDecimal.valueOf(orderItem.getQuantity())))
                 .reduce(BigDecimal.ZERO, BigDecimal::add);
-    }
-
-    @Override
-    @Transactional
-    public OrderDto update(Long orderId, UpdateOrderRequestDto requestDto) {
-        if (!orderRepository.existsById(orderId)) {
-            throw new EntityNotFoundException("Can't find Order by id: " + orderId);
-        }
-        Order order = orderRepository.getReferenceById(orderId);
-        order.setStatus(requestDto.getStatus());
-        return orderMapper.toDto(orderRepository.save(order));
-    }
-
-    @Override
-    public List<OrderItemDto> getOrderItems(Long userId, Long orderId) {
-        return orderItemMapper.toDtoList(
-                orderItemRepository.findByUserIdAndOrderId(userId, orderId));
-    }
-
-    @Override
-    public OrderItemDto getOrderItemByOrderIdAndItemId(
-            Long userId,
-            Long orderId,
-            Long itemId
-    ) {
-        OrderItem orderItem =
-                orderItemRepository.findByUserIdAndOrderIdAndItemId(userId, orderId, itemId)
-                        .orElseThrow(() -> new EntityNotFoundException(
-                                "Can't find OrderItem by id: " + itemId));
-        return orderItemMapper.toDto(orderItem);
     }
 }
