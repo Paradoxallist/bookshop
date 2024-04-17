@@ -1,11 +1,6 @@
 spring:
   application:
     name: bookshop
-  datasource:
-    url: jdbc:mysql://localhost:3306/example
-    username: root
-    password: 1234
-    driver-class-name: com.mysql.cj.jdbc.Driver
   jpa:
     hibernate:
       ddl-auto: 'validate'
@@ -16,7 +11,6 @@ spring:
 server:
   servlet:
     context-path: /api
-  port: 8081
 jwt:
   expiration: 300000
   secret: secretKeysf9yh329rjfdfdds7fgertfsdg5454ggvv45v45g4g545gv45v45vv45v54v54dxsd
