@@ -7,8 +7,8 @@ databaseChangeLog:
       file: db/changelog/changes/03-create-users-table.yaml
   - include:
       file: db/changelog/changes/04-create-users_roles-table.yaml
-  - include:
-      file: db/changelog/changes/05-insert-books.yaml
+  #- include:
+  #   file: db/changelog/changes/05-insert-books.yaml
   - include:
       file: db/changelog/changes/06-insert-roles.yaml
   - include:
@@ -17,12 +17,12 @@ databaseChangeLog:
       file: db/changelog/changes/08-insert-users_roles.yaml
   - include:
       file: db/changelog/changes/09-create-categories-table.yaml
-  - include:
-      file: db/changelog/changes/10-insert-categories.yaml
+  #- include:
+  #    file: db/changelog/changes/10-insert-categories.yaml
   - include:
       file: db/changelog/changes/11-create-books_categories-table.yaml
-  - include:
-      file: db/changelog/changes/12-insert-books_categories.yaml
+  #- include:
+  #    file: db/changelog/changes/12-insert-books_categories.yaml
   - include:
       file: db/changelog/changes/13-create-cart-item-table.yaml
   - include:
