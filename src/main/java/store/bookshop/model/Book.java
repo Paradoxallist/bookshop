@@ -22,7 +22,6 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.hibernate.annotations.SQLDelete;
 import org.hibernate.annotations.SQLRestriction;
-import org.hibernate.validator.constraints.ISBN;
 
 @Entity
 @Getter
@@ -45,7 +44,6 @@ public class Book {
     private String author;
 
     @NotEmpty
-    @ISBN
     @Column(name = "isbn", nullable = false, unique = true)
     private String isbn;
 

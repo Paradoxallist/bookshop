@@ -23,7 +23,6 @@ services:
     env_file: ./.env
     ports:
       - ${SPRING_LOCAL_PORT}:${SPRING_DOCKER_PORT}
-      - ${DEBUG_PORT}:${DEBUG_PORT}
     environment:
       SPRING_APPLICATION_JSON: '{
         "spring.datasource.url": "jdbc:mysql://mysqldb:${MYSQLDB_DOCKER_PORT}/${MYSQLDB_DATABASE}?serverTimeZone=UTC",
@@ -31,4 +30,3 @@ services:
         "spring.datasource.password": "${MYSQLDB_ROOT_PASSWORD}",
         "spring.datasource.driver-class-name" : "com.mysql.cj.jdbc.Driver"
       }'
-      JAVA_TOOL_OPTIONS: "-agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=*:5005"

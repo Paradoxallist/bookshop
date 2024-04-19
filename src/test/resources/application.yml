@@ -1,0 +1,8 @@
+spring:
+  datasource:
+    url: jdbc:tc:mysql:///test
+    username: test
+    password: test
+jwt:
+  expiration: 300000
+  secret: secretKeysf9yh329rjfdfdds7fgertfsdg5454ggvv45v45g4g545gv45v45vv45v54v54dxsd
