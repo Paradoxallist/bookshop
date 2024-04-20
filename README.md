@@ -68,6 +68,13 @@
 * `PUT: /api/cart/cart-items/{cartItemId}` - The endpoint for updating quantity of a specific item in shopping cart.
 * `DELETE: /api/cart/cart-items/{cartItemId}` - The endpoint for deleting items from a shopping cart.
 
+## SQL Database Diagram
+Below is a simplified representation of the database schema used in the Bookstore API:
+
+![bookstore-db-diagram](https://github.com/Paradoxallist/bookshop/assets/106034974/3c4c206b-1f80-45aa-a6b9-6d76533366f3)
+
+This diagram illustrates the relationships between different entities in the database, including tables for users, books, categories, shopping carts, orders, and more.
+
 
 ## Run Project On Your Machine
 1. Download [Java](https://www.oracle.com/java/technologies/javase/jdk17-archive-downloads.html) and [Docker](https://www.docker.com/products/docker-desktop/).
@@ -75,8 +82,16 @@
     - Open your terminal and paste: `git clone https://github.com/Paradoxallist/bookshop.git`
 3. Create the .env file with the corresponding variables:
     - Example:
-    - ![image](https://github.com/Paradoxallist/bookshop/assets/106034974/f7f7ad3c-e9d1-43ae-b30f-f5e5391e0f69)
+    - ![image](https://github.com/Paradoxallist/bookshop/assets/106034974/10f25c62-1b7f-403b-9241-827c7c785dbb)
 4. Build the project:
     - Open your terminal and paste: `mvn clean package`
 5. Use Docker Compose:
     - Open your terminal and paste: `docker compose build` and `docker compose up`
+
+> [!TIP]
+> You can test all methods by your own visiting [Project Documentation](http://ec2-13-49-223-55.eu-north-1.compute.amazonaws.com/api/swagger-ui/index.html#/)
+> 
+>Admin account: 
+>> Username: admin@example.com 
+> 
+>> Password: 123456789

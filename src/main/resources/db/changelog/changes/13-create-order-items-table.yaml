@@ -12,15 +12,20 @@ databaseChangeLog:
                   autoIncrement: true
                   constraints:
                     primaryKey: true
+                    nullable: false
               - column:
                   name: order_id
                   type: bigint
                   constraints:
+                    foreignKeyName: fk_order_items_order_id
+                    references: orders(id)
                     nullable: false
               - column:
                   name: book_id
                   type: bigint
                   constraints:
+                    foreignKeyName: fk_order_items_book_id
+                    references: books(id)
                     nullable: false
               - column:
                   name: quantity
@@ -37,23 +42,4 @@ databaseChangeLog:
                   type: boolean
                   constraints:
                     nullable: false
-            primaryKey:
-              - columnNames:
-                  - id
-            foreignKeyConstraints:
-              - baseColumnNames:
-                  - orders_id
-                baseTableName: order_items
-                constraintName: fk_order_items_order
-                referencedColumnNames:
-                  - id
-                referencedTableName: orders
-                onDelete: CASCADE
-              - baseColumnNames:
-                  - books_id
-                baseTableName: order_items
-                constraintName: fk_order_items_book
-                referencedColumnNames:
-                  - id
-                referencedTableName: books
-                onDelete: CASCADE
+
