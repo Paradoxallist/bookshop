@@ -12,10 +12,13 @@ databaseChangeLog:
                   autoIncrement: true
                   constraints:
                     primaryKey: true
+                    nullable: false
               - column:
                   name: user_id
                   type: bigint
                   constraints:
+                    foreignKeyName: fk_orders_user_id
+                    references: users(id)
                     nullable: false
               - column:
                   name: status
@@ -42,15 +45,3 @@ databaseChangeLog:
                   type: boolean
                   constraints:
                     nullable: false
-            primaryKey:
-              - columnNames:
-                  - id
-            foreignKeyConstraints:
-              - baseColumnNames:
-                  - users_id
-                baseTableName: orders
-                constraintName: fk_orders_user
-                referencedColumnNames:
-                  - id
-                referencedTableName: users
-                onDelete: CASCADE
